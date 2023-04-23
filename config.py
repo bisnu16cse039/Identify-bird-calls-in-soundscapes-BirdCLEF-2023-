@@ -20,7 +20,7 @@ class Config(ConfigBaseModel):
     fmax = 12_500
     top_db = 80
     # output
-    out_dir = "/media/bisnu-sarkar/A82A0A732A0A3EB6/Data/birdcleft_2023_images/mel_spectogram_images/"
+    out_dir = "/media/bisnu-sarkar/A82A0A732A0A3EB6/Data/birdcleft_2023_images/mel_spec_images/"
     jpeg_quality = 100
     
 

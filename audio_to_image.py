@@ -32,7 +32,7 @@ def get_mel_spec_db(path_ogg, offset):
     required_len = cfg.seconds * cfg.sample_rate
     sig, dr = librosa.load(path=path_ogg, sr=cfg.sample_rate, offset=(offset * cfg.seconds), duration=cfg.seconds)
     sig = np.concatenate([sig, np.zeros((required_len - len(sig)), dtype=sig.dtype)])
-    mel_spec = librosa.feature.melspectrogram(
+    mel_spec =librosa.feature.melspectrogram(
         y=sig, 
         hop_length=cfg.hop_length,
         sr=cfg.sample_rate, 
@@ -80,6 +80,12 @@ def process_data(data):
             errors.append((rec.filename, str(err)))
     return l_stats, errors
 
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
 if __name__ == "__main__":
     cfg= Config()
     data = pd.read_csv(cfg.path_train)
@@ -111,9 +117,14 @@ if __name__ == "__main__":
     img_stats = [x for r in results for x in r[0]]
     if len(img_stats):
         img_stats = pd.concat(img_stats).reset_index(drop=True)
-    img_stats
+    
+    print("Expected number of images:", data["num_offset"].sum())
+    img_stats.to_csv("img_stats.csv", index=False)
+    bs = sum(os.stat(f).st_size for f in pathlib.Path(cfg.out_dir).glob("*/*"))
+    print(cfg.out_dir, convert_bytes(bs))
 
 
+#1,24,755
 
 
 
